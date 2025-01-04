@@ -1,0 +1,62 @@
+{
+  "env": {
+    "browser": true,
+    "es2021": true
+  },
+  "extends": [
+    "airbnb-base",
+    "airbnb-typescript/base",
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:import/recommended",
+    "plugin:node/recommended",
+    "prettier"
+  ],
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "project": "./tsconfig.json",
+    "ecmaVersion": "latest",
+    "sourceType": "module"
+  },
+  "settings": {
+    "import/resolver": {
+      "node": {},
+      "typescript": {
+        "directory": "./src"
+      }
+    },
+    "import/parsers": { "@typescript-eslint/parser": [".ts", ".tsx"] }
+  },
+  "plugins": ["@typescript-eslint", "import", "node"],
+  "rules": {
+    "no-process-exit": "off",
+    "node/no-unsupported-features/es-syntax": [
+      "error",
+      { "ignores": ["modules"] }
+    ],
+    "node/no-missing-import": "off",
+    "no-console": "off",
+    "arrow-body-style": "off",
+    "import/prefer-default-export": "off",
+    "import/order": [
+      "error",
+      {
+        "groups": ["builtin", "external", "parent", "sibling", "index"],
+        "alphabetize": {
+          "order": "asc",
+          "caseInsensitive": true
+        },
+        "newlines-between": "never"
+      }
+    ],
+    "import/no-unresolved": "off",
+    "no-param-reassign": "off"
+  },
+  "ignorePatterns": [
+    "dist/",
+    "node_modules/",
+    "src/swagger",
+    "src/config",
+    "src/migrations"
+  ]
+}
