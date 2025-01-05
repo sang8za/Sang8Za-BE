@@ -12,7 +12,7 @@ export default {
         p.id,
         SUM(CASE
           ${baseFilters}
-          -- WHEN ts.type = 'negative' THEN -3 -- Penalty for dislikes
+          -- WHEN ts.type = 'negative' THEN -3 -- Penalty for dislikes. should restore this to avid breaking query without any filters
           ELSE 0
         END)
         +

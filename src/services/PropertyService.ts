@@ -6,7 +6,7 @@ import type { PropertyOption } from '../interfaces/property/PropertyOption';
 
 const getList = (userId: number, propertyOption: PropertyOption) =>
   withConnection(async (db) => {
-    const { distance } = propertyOption;
+    const { distance = 100 } = propertyOption; // default distance is 100
     const necessaryPropertyOptions = { ...propertyOption };
     delete necessaryPropertyOptions.distance; // distance is calculated separately
 
@@ -23,6 +23,7 @@ const getList = (userId: number, propertyOption: PropertyOption) =>
 
 const getMatchPointBaseFilters = (propertyOption: PropertyOption): string => {
   let baseFilters: string = '';
+  if (Object.keys(propertyOption).length === 0) return baseFilters;
 
   for (const [typeString, value] of Object.entries(propertyOption)) {
     const type = // map type string from the request and option_id from the database
