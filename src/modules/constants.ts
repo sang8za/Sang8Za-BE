@@ -1,3 +1,20 @@
 export default {
-  placeholder: 0,
+  OPTION_MAP: {
+    distance: 1,
+    housingType: 2,
+    price: 3,
+    isPrivate: 4,
+    petsOk: 5,
+    isFurnished: 6,
+    park: 7,
+    sex: 8,
+    age: 9,
+    status: 10,
+    tendency: 11,
+    noSmoking: 12,
+    party: 13,
+    vegetarian: 14,
+  },
+  RANGE_OPTIONS: ['price'],
+  STRING_OPTIONS: ['housingType', 'park'],
 };
