@@ -1,5 +1,6 @@
 import express, { Request, Response, NextFunction } from 'express';
 import routes from './routes';
+import logger from './middlewares/requestLogger';
 import { closePool } from './config/db';
 
 const app = express();
@@ -7,6 +8,7 @@ const app = express();
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
+app.use(logger);
 app.use(routes);
 
 interface ErrorType {
