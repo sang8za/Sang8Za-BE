@@ -23,4 +23,7 @@ export default {
   pgUser: process.env.PG_USER as string,
   pgPassword: process.env.PG_PASSWORD as string,
   pgDatabase: process.env.PG_DATABASE as string,
+
+  // EC2
+  ec2Host: process.env.EC2_HOST as string,
 };

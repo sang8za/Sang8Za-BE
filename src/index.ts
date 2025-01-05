@@ -1,10 +1,31 @@
 import express, { Request, Response, NextFunction } from 'express';
 import routes from './routes';
 import logger from './middlewares/requestLogger';
+import config from './config';
+import cors from 'cors';
 import { closePool } from './config/db';
 
 const app = express();
 
+const allowedOrigins = ['http://localhost:3000', config.ec2Host];
+const corsOptions = {
+  origin: allowedOrigins,
+  credentials: true,
+};
+
+app.use(cors(corsOptions));
+app.use((req, res, next) => {
+  const origin: string = req.headers.origin!;
+  if (allowedOrigins.includes(origin)) {
+    res.setHeader('Access-Control-Allow-Origin', origin);
+  }
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH');
+  res.header(
+    'Access-Control-Allow-Headers',
+    'X-Requested-With, content-type, x-access-token'
+  );
+  next();
+});
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
