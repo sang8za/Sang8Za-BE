@@ -1,5 +1,5 @@
-import app from "./index";
-import config from "./config";
+import app from './index';
+import config from './config';
 
 app
   .listen(config.port, () => {
@@ -9,7 +9,7 @@ app
     ################################################
   `);
   })
-  .on("error", (err) => {
+  .on('error', (err) => {
     console.error(err);
     process.exit(1);
   });

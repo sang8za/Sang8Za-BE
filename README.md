@@ -1,8 +1,10 @@
 # node-typescript-boilerplate
+
 Node.js, TypeScript, TypeORM(PostgreSQL), MongoDB(Mongoose) boiler-plate
 by HYOSITIVE
 
 ### 🔎 Dependencies Module
+
 ```json
 {
   "name": "node-typescript-boilerplate",
@@ -36,5 +38,4 @@ by HYOSITIVE
     "typeorm-naming-strategies": "^4.1.0"
   }
 }
-
 ```
