@@ -3,6 +3,6 @@ import { MatchController } from '../controllers';
 
 const router = Router();
 
-// router.get('/:id', MatchController.getUser);
+router.post('/tenant-swipe', MatchController.createTenantSwipe);
 
 export default router;
