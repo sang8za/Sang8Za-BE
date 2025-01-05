@@ -46,4 +46,38 @@ const createMatch = (tenantSwipeId: number, landlordSwipeId: number) =>
     return match;
   });
 
-export default { createTenantSwipe };
+const createLandlordSwipe = (
+  userId: number,
+  tenantId: number,
+  isPositive: boolean
+) =>
+  withConnection(async (db) => {
+    const {
+      rows: [landlordSwipe],
+    } = await db.query(MatchQueries.QUERY_CREATE_LANDLORD_SWIPE, [
+      userId,
+      tenantId,
+      isPositive,
+    ]);
+
+    if (!isPositive) return { row: landlordSwipe, isMatched: false }; // if landlord swiped left, no need to check tenant swipe
+
+    const tenantSwipe = await checkTenantSwipe(userId, tenantId);
+    if (!tenantSwipe) return { row: landlordSwipe, isMatched: false };
+
+    const match = await createMatch(tenantSwipe.id, landlordSwipe.id); // if tenant swiped right, create a match
+    return { row: match, isMatched: true };
+  });
+
+const checkTenantSwipe = (landlordId: number, tenantId: number) =>
+  withConnection(async (db) => {
+    const {
+      rows: [landlordSwipe],
+    } = await db.query(MatchQueries.QUERY_GET_TENANT_SWIPE, [
+      landlordId,
+      tenantId,
+    ]);
+    return landlordSwipe;
+  });
+
+export default { createTenantSwipe, createLandlordSwipe };

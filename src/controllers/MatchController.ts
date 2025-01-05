@@ -17,14 +17,12 @@ const createTenantSwipe = asyncWrapper(async (req: Request, res: Response) => {
     const createdMessage = isMatched
       ? message.MATCH_CREATED
       : message.SWIPE_CREATED;
-    return res
-      .status(httpStatusCode.CREATED)
-      .send(
-        util.success(httpStatusCode.CREATED, createdMessage, {
-          ...row,
-          isMatched,
-        })
-      );
+    return res.status(httpStatusCode.CREATED).send(
+      util.success(httpStatusCode.CREATED, createdMessage, {
+        ...row,
+        isMatched,
+      })
+    );
   } catch (error) {
     console.log(error);
     return res
@@ -38,4 +36,37 @@ const createTenantSwipe = asyncWrapper(async (req: Request, res: Response) => {
   }
 });
 
-export default { createTenantSwipe };
+const createLandlordSwipe = asyncWrapper(
+  async (req: Request, res: Response) => {
+    const { userId, tenantId, isPositive } = req.body;
+    try {
+      const { row, isMatched } = await MatchService.createLandlordSwipe(
+        userId,
+        tenantId,
+        isPositive
+      );
+
+      const createdMessage = isMatched
+        ? message.MATCH_CREATED
+        : message.SWIPE_CREATED;
+      return res.status(httpStatusCode.CREATED).send(
+        util.success(httpStatusCode.CREATED, createdMessage, {
+          ...row,
+          isMatched,
+        })
+      );
+    } catch (error) {
+      console.log(error);
+      return res
+        .status(httpStatusCode.INTERNAL_SERVER_ERROR)
+        .send(
+          util.fail(
+            httpStatusCode.INTERNAL_SERVER_ERROR,
+            message.INTERNAL_SERVER_ERROR
+          )
+        );
+    }
+  }
+);
+
+export default { createTenantSwipe, createLandlordSwipe };
