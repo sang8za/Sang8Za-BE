@@ -30,4 +30,24 @@ const getUser = asyncWrapper(async (req: Request, res: Response) => {
   }
 });
 
-export default { getUser };
+const getList = asyncWrapper(async (req: Request, res: Response) => {
+  const { isLimited } = req.query;
+  try {
+    const users = await UserService.getList(Boolean(isLimited));
+
+    return res
+      .status(httpStatusCode.OK)
+      .send(util.success(httpStatusCode.OK, message.SUCCESS, users));
+  } catch (error) {
+    return res
+      .status(httpStatusCode.INTERNAL_SERVER_ERROR)
+      .send(
+        util.fail(
+          httpStatusCode.INTERNAL_SERVER_ERROR,
+          message.INTERNAL_SERVER_ERROR
+        )
+      );
+  }
+});
+
+export default { getUser, getList };
