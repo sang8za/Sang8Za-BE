@@ -76,4 +76,4 @@ const hydrateProperties = (properties: any[]) => {
   });
 };
 
-export default { getList };
+export default { getList, hydrateProperties };

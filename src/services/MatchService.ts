@@ -1,5 +1,6 @@
 import { withConnection } from '../middlewares/connection';
 import { MatchQueries, UserQueries } from './queries';
+import PropertyService from './PropertyService';
 
 const createTenantSwipe = (
   userId: number,
@@ -91,8 +92,27 @@ const getList = (userId: number) =>
       db.query(UserQueries.QUERY_GET_USER_BY_ID, [userId]),
       db.query(MatchQueries.GET_MATCHES_BY_USER_ID, [userId]),
     ]);
+    const matchIds = matches.map(({ id }: { id: number }) => id);
 
-    console.log(matches, type);
+    if (type === 'tenant') {
+      const { rows: matchedProperties } = await db.query(
+        MatchQueries.GET_MATCHED_PROPERTIES,
+        [matchIds]
+      );
+      const hydratedProperties = await PropertyService.hydrateProperties(
+        matchedProperties
+      );
+      return hydratedProperties.map((property: any) => ({
+        ...property,
+        is_contracted: matches.find(
+          ({ id }: { id: number }) => id === property.match_id
+        ).is_contracted,
+      }));
+    } else {
+      // if landlord
+      return matchIds;
+      // return tenant info by UserService
+    }
   });
 
 export default { createTenantSwipe, createLandlordSwipe, getList };

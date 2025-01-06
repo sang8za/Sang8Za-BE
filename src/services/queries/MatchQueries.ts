@@ -38,8 +38,17 @@ export default {
         ELSE FALSE
       END AS is_contracted
     FROM matches m
-    LEFT JOIN contract c ON c.match_id = m.id
+    LEFT JOIN contracts c ON c.match_id = m.id
     WHERE m.tenant_swipe IN (SELECT id FROM tenant_swipes WHERE tenant_id = $1)
       OR m.landlord_swipe IN (SELECT id FROM landlord_swipes WHERE landlord_id = $1)
+  `,
+  GET_MATCHED_PROPERTIES: `
+    SELECT
+      m.id AS match_id,
+      p.*
+    FROM properties p
+    JOIN tenant_swipes ts ON ts.property_id = p.id
+    JOIN matches m ON m.tenant_swipe = ts.id
+    WHERE m.id = ANY($1)
   `,
 };
