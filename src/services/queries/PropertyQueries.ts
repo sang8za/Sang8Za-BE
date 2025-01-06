@@ -45,4 +45,13 @@ export default {
     WHERE property_id = ANY($1)
     GROUP BY property_id
   `,
+  QUERY_GET_PROPERTY_OPTIONS: `
+    SELECT
+      l.property_id AS id,
+      o.name,
+      l.value
+    FROM l_property_option l
+    JOIN options o ON o.id = l.option_id
+    WHERE l.property_id = ANY($1)
+  `,
 };

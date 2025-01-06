@@ -46,14 +46,30 @@ const getMatchPointBaseFilters = (propertyOption: PropertyOption): string => {
 const hydrateProperties = (properties: any[]) => {
   return withConnection(async (db) => {
     const propertyIds = properties.map(({ id }: { id: number }) => id);
-    const { rows: images } = await db.query(
-      PropertyQueries.QUERY_GET_PROPERTY_IMAGES,
-      [propertyIds]
-    );
+    const [{ rows: images }, { rows: options }] = await Promise.all([
+      db.query(PropertyQueries.QUERY_GET_PROPERTY_IMAGES, [propertyIds]),
+      db.query(PropertyQueries.QUERY_GET_PROPERTY_OPTIONS, [propertyIds]),
+    ]);
+
     const imageMap = utils.buildMap(images);
+    const optionMap = options.reduce((acc, { id, name, value }) => {
+      acc[id] = acc[id] || {};
+
+      if (['true', 'false'].includes(value)) {
+        acc[id][name] = value === 'true';
+      } else if (!isNaN(Number(value))) {
+        acc[id][name] = Number(value);
+      } else {
+        acc[id][name] = value;
+      }
+
+      return acc;
+    }, {});
+
     return properties.map((property: any) => ({
       ...property,
       images: imageMap[property.id].images || [],
+      options: optionMap[property.id],
     }));
   });
 };
