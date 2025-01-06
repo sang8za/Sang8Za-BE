@@ -6,6 +6,7 @@ const message = {
   SUCCESS: 'Success',
   MATCH_CREATED: 'Match Created',
   SWIPE_CREATED: 'Swipe Created',
+  CONTRACT_CREATED: 'Contract Created',
 };
 
 export default message;
