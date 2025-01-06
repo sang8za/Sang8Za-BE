@@ -12,7 +12,7 @@ export default {
         p.id,
         SUM(CASE
           ${baseFilters}
-          -- WHEN ts.type = 'negative' THEN -3 -- Penalty for dislikes. should restore this to avid breaking query without any filters
+          WHEN ts.is_positive IS FALSE THEN -3 -- Penalty for dislikes. should restore this to avid breaking query without any filters
           ELSE 0
         END)
         +
@@ -22,11 +22,12 @@ export default {
             COS(RADIANS(p.lng) - RADIANS((SELECT lng FROM user_target_location))) +
             SIN(RADIANS((SELECT lat FROM user_target_location))) * SIN(RADIANS(p.lat))
           )) <= $2 THEN 1
-          ELSE -3 -- Penalty for being outside the boundary
+          ELSE -2 -- Penalty for being outside the boundary
         END AS match_count
       FROM properties p
       JOIN l_property_option po ON po.property_id = p.id
-      -- LEFT JOIN tenant_swipes ts ON ts.property_id = p.id AND ts.tenant_id = :tenant_id
+      LEFT JOIN tenant_swipes ts ON ts.property_id = p.id
+        AND ts.tenant_id = $1
       GROUP BY p.id
     )
     SELECT
