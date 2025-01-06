@@ -7,7 +7,7 @@ export default {
     petsOk: 5,
     isFurnished: 6,
     park: 7,
-    sex: 8,
+    gender: 8,
     age: 9,
     status: 10,
     tendency: 11,
