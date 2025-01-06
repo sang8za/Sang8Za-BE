@@ -7,7 +7,11 @@ import { closePool } from './config/db';
 
 const app = express();
 
-const allowedOrigins = ['http://localhost:3000', config.ec2Host];
+const allowedOrigins = [
+  'http://localhost:3000',
+  config.ec2Host,
+  `https://${config.ec2Host}.nip.io`,
+];
 const corsOptions = {
   origin: allowedOrigins,
   credentials: true,
