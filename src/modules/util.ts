@@ -14,6 +14,18 @@ const util = {
       message,
     };
   },
+  buildMap(
+    entries: Array<Record<string, any>>,
+    { key = 'id', keepKey = true } = {}
+  ) {
+    return Object.fromEntries(
+      entries.map((entry) =>
+        keepKey
+          ? [entry[key], { ...entry }]
+          : [entry[key], { ...entry, [key]: undefined }]
+      )
+    );
+  },
 };
 
 export default util;
