@@ -1,5 +1,5 @@
 export default {
-  QUERY_GET_PROPERTY_LIST: (baseFilters: string) => `
+  QUERY_GET_RECOMMENDED_PROPERTY_LIST: (baseFilters: string) => `
     WITH user_target_location AS (
       SELECT
         target_lat AS lat,

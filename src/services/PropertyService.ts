@@ -16,7 +16,9 @@ const getList = (userId: number, propertyOption: PropertyOption) =>
     );
 
     const { rows: properties } = await db.query(
-      PropertyQueries.QUERY_GET_PROPERTY_LIST(matchPointBaseFilters),
+      PropertyQueries.QUERY_GET_RECOMMENDED_PROPERTY_LIST(
+        matchPointBaseFilters
+      ),
       [userId, Number(distance)]
     );
     return hydrateProperties(properties);
