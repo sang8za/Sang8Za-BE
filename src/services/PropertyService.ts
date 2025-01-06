@@ -1,5 +1,6 @@
 import { withConnection } from '../middlewares/connection';
 import { PropertyQueries } from './queries';
+import utils from '../modules/util';
 import CONSTANTS from '../modules/constants';
 
 import type { PropertyOption } from '../interfaces/property/PropertyOption';
@@ -18,7 +19,7 @@ const getList = (userId: number, propertyOption: PropertyOption) =>
       PropertyQueries.QUERY_GET_PROPERTY_LIST(matchPointBaseFilters),
       [userId, Number(distance)]
     );
-    return properties;
+    return hydrateProperties(properties);
   });
 
 const getMatchPointBaseFilters = (propertyOption: PropertyOption): string => {
@@ -40,6 +41,21 @@ const getMatchPointBaseFilters = (propertyOption: PropertyOption): string => {
   }
 
   return baseFilters;
+};
+
+const hydrateProperties = (properties: any[]) => {
+  return withConnection(async (db) => {
+    const propertyIds = properties.map(({ id }: { id: number }) => id);
+    const { rows: images } = await db.query(
+      PropertyQueries.QUERY_GET_PROPERTY_IMAGES,
+      [propertyIds]
+    );
+    const imageMap = utils.buildMap(images);
+    return properties.map((property: any) => ({
+      ...property,
+      images: imageMap[property.id].images || [],
+    }));
+  });
 };
 
 export default { getList };

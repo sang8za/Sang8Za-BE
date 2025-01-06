@@ -36,5 +36,13 @@ export default {
     JOIN all_candidates ac ON ac.id = p.id
     WHERE ac.match_count > 0
     ORDER BY ac.match_count DESC;
-`,
+  `,
+  QUERY_GET_PROPERTY_IMAGES: `
+    SELECT
+      property_id AS id,
+      ARRAY_AGG(image_url) AS images
+    FROM property_images
+    WHERE property_id = ANY($1)
+    GROUP BY property_id
+  `,
 };
