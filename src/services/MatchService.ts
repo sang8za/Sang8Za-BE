@@ -1,5 +1,5 @@
 import { withConnection } from '../middlewares/connection';
-import { MatchQueries } from './queries';
+import { MatchQueries, UserQueries } from './queries';
 
 const createTenantSwipe = (
   userId: number,
@@ -80,4 +80,19 @@ const checkTenantSwipe = (landlordId: number, tenantId: number) =>
     return landlordSwipe;
   });
 
-export default { createTenantSwipe, createLandlordSwipe };
+const getList = (userId: number) =>
+  withConnection(async (db) => {
+    const [
+      {
+        rows: [{ type }],
+      },
+      { rows: matches },
+    ] = await Promise.all([
+      db.query(UserQueries.QUERY_GET_USER_BY_ID, [userId]),
+      db.query(MatchQueries.GET_MATCHES_BY_USER_ID, [userId]),
+    ]);
+
+    console.log(matches, type);
+  });
+
+export default { createTenantSwipe, createLandlordSwipe, getList };

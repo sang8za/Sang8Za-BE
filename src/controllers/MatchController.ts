@@ -69,4 +69,25 @@ const createLandlordSwipe = asyncWrapper(
   }
 );
 
-export default { createTenantSwipe, createLandlordSwipe };
+const getList = asyncWrapper(async (req: Request, res: Response) => {
+  const { userId } = req.query;
+  try {
+    const matches = await MatchService.getList(Number(userId));
+
+    return res
+      .status(httpStatusCode.OK)
+      .send(util.success(httpStatusCode.OK, message.SUCCESS, matches));
+  } catch (error) {
+    console.log(error);
+    return res
+      .status(httpStatusCode.INTERNAL_SERVER_ERROR)
+      .send(
+        util.fail(
+          httpStatusCode.INTERNAL_SERVER_ERROR,
+          message.INTERNAL_SERVER_ERROR
+        )
+      );
+  }
+});
+
+export default { createTenantSwipe, createLandlordSwipe, getList };

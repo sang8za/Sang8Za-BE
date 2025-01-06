@@ -30,4 +30,16 @@ export default {
       AND ts.tenant_id = $2
       AND ts.is_positive IS TRUE
   `,
+  GET_MATCHES_BY_USER_ID: `
+    SELECT
+      m.*,
+      CASE 
+        WHEN c.id IS NOT NULL THEN TRUE
+        ELSE FALSE
+      END AS is_contracted
+    FROM matches m
+    LEFT JOIN contract c ON c.match_id = m.id
+    WHERE m.tenant_swipe IN (SELECT id FROM tenant_swipes WHERE tenant_id = $1)
+      OR m.landlord_swipe IN (SELECT id FROM landlord_swipes WHERE landlord_id = $1)
+  `,
 };
